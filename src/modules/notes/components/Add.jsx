@@ -1,4 +1,4 @@
-import { Box } from "@mui/material"
+import { Box, FormControl, Typography } from "@mui/material"
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 import NoteAddIcon from '@mui/icons-material/NoteAdd';
@@ -15,14 +15,39 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { MuiColorInput } from 'mui-color-input'
 import { useDispatch } from "react-redux";
 import { addNote } from "../redux/note-slice";
+// import Typography from '@mui/material/Typography';
+import Snackbar from '@mui/material/Snackbar';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
+import { useForm } from "react-hook-form";
+import { formState } from "react-hook-form";
+//import { FormDatePicker } from "../../../shared/components/FormDatePicker";
+
 
 export const Add = ()=>{
+  const {register, handleSubmit, formState:{error}}=useForm();
   const id = useRef();
   const title = useRef();
   const desc = useRef();
   const [dateValue, setDateValue] = useState(null);
   const [colorValue, setColorValue] = useState('#ffffff');
-  const dispatch = useDispatch();  
+  // const[message,setMessage] = useState('');
+  const [open, setOpen] = useState(false);
+  const dispatch = useDispatch(); 
+  const handleClose = ()=>setOpen(false); 
+  const onSubmit = (data)=>{
+    console.log('Data is',data);
+  }
+  const action = <>
+  <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={handleClose}
+      >
+        <CloseIcon fontSize="small" />
+      </IconButton></>
+  
   const takeNote =()=>{
         const idValue = id.current.value;
         const titleValue = title.current.value;
@@ -40,14 +65,33 @@ export const Add = ()=>{
         // props.fn();  
         const noteObject = {idValue,titleValue,descValue,date,colorValue};
         dispatch(addNote(noteObject));
+        // setMessage('Record Added...');
+        // setTimeout(() => {
+        //   setMessage('')
+        // }, 2000);
+        setOpen(true);
+
     }
     return (<>
       <Box sx={{
         margin:5,flexDirection:'column',display:'flex'
       }}>
+        <form onsubmit={handleSubmit(onsubmit)}>
+          <FormControl>
+        {/* <Typography>
+          {message}
+        </Typography> */}
+        <Snackbar
+        open={open}
+        autoHideDuration={6000}
+        onClose={handleClose}
+        message="Note Added"
+        action={action}
+      />
         <TextField
         id="note id"
-        inputRef = {id}
+        {...register('id')}
+        //inputRef = 
         label="Enter Id"
         InputProps={{
           startAdornment: (
@@ -60,7 +104,8 @@ export const Add = ()=>{
       />
       <TextField
         id="note-title"
-        inputRef = {title}
+        {...register('title')}
+        // inputRef = {title}
         label="Title"
         InputProps={{
           startAdornment: (
@@ -73,7 +118,8 @@ export const Add = ()=>{
       />
       <TextField
         id="note-desc"
-        inputRef={desc}
+        {...register('desc')}
+        // inputRef={desc}
         label="description"
         multiline
         maxRows={4}
@@ -86,12 +132,12 @@ export const Add = ()=>{
         }}
         variant="standard"
       />
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
-       <DatePicker value={dateValue} onChange={(selectedDate) => setDateValue(selectedDate)} />
-    </LocalizationProvider>
-
-      <MuiColorInput value={colorValue} onChange={(selectedColor)=>setColorValue(selectedColor)} />
-      <Button onClick={takeNote} variant="contained">Add</Button>
+    {/* <FormDatePicker name = "date" {...register('date')} control = {control}/> */}
+       
+      <MuiColorInput  value={colorValue} onChange={(selectedColor)=>setColorValue(selectedColor)} />
+      <Button type='submit' variant="contained">Add</Button>
+      </FormControl>
+      </form>
       </Box>
       </>
     )
