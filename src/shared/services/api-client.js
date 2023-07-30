@@ -1,6 +1,6 @@
 //Back-End Calls
 //CRUD
-import axios from "axios"
+import axios from "axios";
 export const apiclient = {
     async read(){
           //get
@@ -13,15 +13,22 @@ export const apiclient = {
         //       console.log("Error is",err);
         //   })
         try{
-        const response = await axios.get(process.env.REACT_APP_NOTES_URL)
+        const response = await axios.post(process.env.REACT_APP_NOTES_URL);
         return response.data.notes;
         }
         catch(err){
             throw err;
         }
     }, 
-    insert(){
+    async insert(note){
         //post
+        try{
+            const response = await axios.post(process.env.REACT_APP_NOTES_URL);
+
+        }
+        catch(err){
+            throw err;
+        }
     },
     update(){
         //put

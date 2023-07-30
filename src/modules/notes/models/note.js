@@ -4,7 +4,7 @@ export class Note{
         this.id =id;
         this.title = title;
         this.desc = desc;
-        this.cdate = cdate;
+        this.cdate = date;
         this.importance = importance;
     }
 

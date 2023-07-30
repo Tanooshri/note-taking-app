@@ -20,12 +20,15 @@ import Snackbar from '@mui/material/Snackbar';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import { useForm } from "react-hook-form";
+import './Add.css';
 import { formState } from "react-hook-form";
+import { FormDatePicker } from "../../../shared/components/FormDatePicker";
 //import { FormDatePicker } from "../../../shared/components/FormDatePicker";
+ 
 
 
 export const Add = ()=>{
-  const {register, handleSubmit, formState:{error}}=useForm();
+  const {control, register, handleSubmit, formState:{errors}}=useForm();
   const id = useRef();
   const title = useRef();
   const desc = useRef();
@@ -37,7 +40,14 @@ export const Add = ()=>{
   const handleClose = ()=>setOpen(false); 
   const onSubmit = (data)=>{
     console.log('Data is',data);
-  }
+    const noteObject = new Note(
+      data.idValue,
+      data.titleValue,
+      data.descValue,
+      data.date,
+      data.colorValue
+    )
+  };
   const action = <>
   <IconButton
         size="small"
@@ -65,6 +75,7 @@ export const Add = ()=>{
         // props.fn();  
         const noteObject = {idValue,titleValue,descValue,date,colorValue};
         dispatch(addNote(noteObject));
+        setOpen(true);
         // setMessage('Record Added...');
         // setTimeout(() => {
         //   setMessage('')
@@ -76,7 +87,7 @@ export const Add = ()=>{
       <Box sx={{
         margin:5,flexDirection:'column',display:'flex'
       }}>
-        <form onsubmit={handleSubmit(onsubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <FormControl>
         {/* <Typography>
           {message}
@@ -104,7 +115,7 @@ export const Add = ()=>{
       />
       <TextField
         id="note-title"
-        {...register('title')}
+        {...register('title', {required:true, minLength:3, pattern:/^[a-z]{3,10}/})}
         // inputRef = {title}
         label="Title"
         InputProps={{
@@ -116,9 +127,13 @@ export const Add = ()=>{
         }}
         variant="standard"
       />
+      {errors.title && errors.title.type=='required' && (<p className='errorMsg'> Title is required</p>)}
+      {errors.title && errors.title.type=='minLength' && (<p className='errorMsg'>Min length should be gte 3</p>)}
       <TextField
         id="note-desc"
-        {...register('desc')}
+        {...register('desc',{validate:{
+          checkLength:(value)=>value.length>=6
+        }})}
         // inputRef={desc}
         label="description"
         multiline
@@ -132,9 +147,10 @@ export const Add = ()=>{
         }}
         variant="standard"
       />
-    {/* <FormDatePicker name = "date" {...register('date')} control = {control}/> */}
+      {errors.desc?.type ==='checkLength' && (<p>Min length for desc is 6</p>)}
+       <FormDatePicker name="dateValue" {...register('dateValue')} control={control}/>
        
-      <MuiColorInput  value={colorValue} onChange={(selectedColor)=>setColorValue(selectedColor)} />
+      <MuiColorInput  {...register('color')} value={colorValue} onChange={(selectedColor)=>setColorValue(selectedColor)} />
       <Button type='submit' variant="contained">Add</Button>
       </FormControl>
       </form>
