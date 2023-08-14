@@ -91,7 +91,7 @@ export const List = ()=>{
                   <TableCell align="right">{note.idValue}</TableCell>
                   <TableCell align="left">{note.titleValue}</TableCell>
                   <TableCell align="left">{note.descValue}</TableCell>
-                  <TableCell align="right">{note.date}</TableCell>
+                  <TableCell align="right">{note.dateValue}</TableCell>
                   <TableCell align="right">{note.colorValue}</TableCell>
                   <TableCell align="right"><DeleteIcon/><EditIcon/></TableCell>
               </TableRow>);
@@ -102,7 +102,7 @@ export const List = ()=>{
                     <TableCell align="right">{note.idValue}</TableCell>
                     <TableCell align="left">{note.titleValue}</TableCell>
                     <TableCell align="left">{note.descValue}</TableCell>
-                    <TableCell align="right">{note.date}</TableCell>
+                    <TableCell align="right">{note.dateValue}</TableCell>
                     <TableCell align="right">{note.colorValue}</TableCell>
                     <TableCell align="right"><DeleteIcon/><EditIcon/></TableCell>
                 </TableRow>);

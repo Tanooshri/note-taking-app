@@ -23,10 +23,11 @@ export const apiclient = {
     async insert(note){
         //post
         try{
-            const response = await axios.post(process.env.REACT_APP_NOTES_URL);
-
+            const response = await axios.post(process.env.REACT_APP_NOTES_URL, note);
+            return response.data;
         }
         catch(err){
+            console.log("Error in post", err);
             throw err;
         }
     },
@@ -36,4 +37,4 @@ export const apiclient = {
     remove(){
         //delete
     }
-}
+};

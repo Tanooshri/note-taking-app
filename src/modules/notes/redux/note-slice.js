@@ -10,11 +10,31 @@ export const fetchNotes = createAsyncThunk('notes/fetch',async()=>{
  catch(err){
     throw err;
  } 
-})
+});
+export const insertNotes = createAsyncThunk(
+    "notes/insertNotes",
+    async (note) => {
+      console.log("THe extra is called", note);
+      try {
+        const response = await apiclient.insert(note);
+        return response;
+      } catch (err) {
+        console.log("Err is ::: ", err);
+        throw err;
+      }
+    }
+  );
+
 
 const noteSlice = createSlice({
     name:'noteSlice',
-    initialState:{'notes':[],'total':0,'search-result':[], isLoading:true},
+    initialState:{notes:[],
+      total:0,
+      "search-result":[],
+       isLoading:false,
+       err: null,
+      },
+
     reducers:{
         //CRUD operations
         //Sync Operations
@@ -66,8 +86,21 @@ const noteSlice = createSlice({
             state.notes = [];
             state.err = action.payload;
         })
+        .addCase(insertNotes.fulfilled, (state, action) => {
+            const updatedNote = action.payload;
+            state.isLoading = false;
+            state.err = null;
+          })
+          .addCase(insertNotes.rejected, (state, action) => {
+            state.isLoading = false;
+            state.error = action.payload;
+          })
+          .addCase(insertNotes.pending, (state) => {
+            state.isLoading = true;
+            state.err = null;
+          });
         //Async Operations
-    }
+    },
 });
 export const {addNote, removeNote, searchNote,sortNote,getTotalRecord} = noteSlice.actions;
 export default noteSlice.reducer;
